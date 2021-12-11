@@ -1,5 +1,6 @@
 from models.user import UserModel
 import sqlite3
+from models.user import BaseUserModel
 
 
 class FollowCRUD:
@@ -40,34 +41,37 @@ class FollowCRUD:
             )
         finally:
             cur.close()
+
     # найти подписки
-    def findFollows(
+    def find_follows(
             self, conn: sqlite3.Connection, id: str
     ):
         cur = conn.cursor()
 
         try:
             cur.execute(
-                "SELECT Follow.follows FROM Follow WHERE Follow.follower LIKE ?", (id,),
+                "SELECT User.login, User.id FROM User JOIN Follow on User.id = Follow.follows WHERE Follow.follower LIKE ? ",
+                (id,),
 
             )
-            records = cur.fetchall()
-            return records
+            record = cur.fetchall()
+            return record
         finally:
             cur.close()
 
     # найти подписчиков
-    def findFollowers(
+    def find_followers(
             self, conn: sqlite3.Connection, id: str
     ):
         cur = conn.cursor()
 
         try:
             cur.execute(
-                "SELECT Follow.follower FROM Follow WHERE Follow.follows LIKE ?", (id,),
+                "SELECT User.login, User.id FROM User JOIN Follow on User.id = Follow.follower WHERE Follow.follows LIKE ? ",
+                (id,),
 
             )
-            records = cur.fetchall()
-            return records
+            record = cur.fetchall()
+            return record
         finally:
             cur.close()

@@ -13,12 +13,11 @@ class PostsCRUD:
 
         try:
             cur.execute(
-                "INSERT INTO Posts(id, creator, image, description, created) "
-                "VALUES(?, ?, ?, ?, ?)",
+                "INSERT INTO Posts(id, creator, description, created) "
+                "VALUES(?, ?, ?, ?)",
                 (
                     data.id,
                     data.creator_id,
-                    data.image,
                     data.description,
                     data.created,
                 ),
@@ -33,7 +32,7 @@ class PostsCRUD:
 
         try:
             cur.execute(
-                "SELECT id, image, description, created "
+                "SELECT id, description, created "
                 "FROM Posts "
                 "WHERE creator=?"
                 "ORDER BY created DESC",
@@ -44,11 +43,11 @@ class PostsCRUD:
                 ReturnPostModel(
                     id=id,
                     creator=creator.id,
-                    image=image,
+
                     description=description,
                     created=created,
                 )
-                for (id, image, description, created) in data
+                for (id, description, created) in data
             ]
         finally:
             cur.close()
@@ -60,7 +59,7 @@ class PostsCRUD:
 
         try:
             cur.execute(
-                "SELECT Posts.id, Posts.image, Posts.description, Posts.created, User.id AS user_id "
+                "SELECT Posts.id, Posts.description, Posts.created, User.id AS user_id "
                 "FROM Posts "
                 "JOIN Follow ON Posts.creator = Follow.follows "
                 "JOIN User ON Posts.creator = User.id "
@@ -73,11 +72,10 @@ class PostsCRUD:
                 ReturnPostModel(
                     id=id,
                     creator=user_id,
-                    image=image,
                     description=description,
                     created=created,
                 )
-                for (id, image, description, created, user_id) in data
+                for (id, description, created, user_id) in data
             ]
         finally:
             cur.close()
@@ -90,7 +88,7 @@ class PostsCRUD:
 
         try:
             cur.execute(
-                "SELECT id, creator, image, description, created "
+                "SELECT id, creator,  description, created "
                 "FROM Posts "
                 "ORDER BY created DESC"
 
@@ -100,11 +98,10 @@ class PostsCRUD:
                 ReturnPostModel(
                     id=id,
                     creator=creator,
-                    image=image,
                     description=description,
                     created=created,
                 )
-                for (id, creator, image, description, created) in data
+                for (id, creator,  description, created) in data
             ]
 
         finally:

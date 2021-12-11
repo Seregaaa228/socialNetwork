@@ -32,7 +32,7 @@ def get_posts_feed():
 
 # все посты
 @posts_blueprint.route("")
-def get_allPosts_feed():
+def get_all_posts_feed():
     with get_connection() as conn:
         posts = posts_crud.get_by_all(conn)
 
@@ -41,7 +41,7 @@ def get_allPosts_feed():
 
 # личные посты
 @posts_blueprint.route("/personal")
-def get_personalPosts_feed():
+def get_personal_posts_feed():
     current_user = deps.get_current_user()
 
     with get_connection() as conn:
@@ -53,6 +53,8 @@ def get_personalPosts_feed():
 # удаление поста по айди
 @posts_blueprint.route("<string:id>/deletePost", methods=["DELETE"])
 def delete_post(id: str):
-    with get_connection() as conn:
-        posts_crud.delete(conn, id)
+    if deps.get_current_user():
+        with get_connection() as conn:
+            posts_crud.delete(conn, id)
+
     return jsonify({"info": "OK"}), 201

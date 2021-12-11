@@ -23,6 +23,7 @@ def get_user_data():
     current_user = deps.get_current_user()
     return redirect(f"/api/user/{current_user.login}")
 
+
 # подписчики юзера
 @user_blueprint.route("/followers")
 def get_user_followers():
@@ -63,31 +64,19 @@ def follow(login: str):
 # все подписки
 @user_blueprint.route("<string:login>/follows")
 def get_all_user_follows(login: str):
-    logins = []
-    accounts = []
     user = deps.get_user_by_login(login)
     with get_connection() as conn:
-        follows = deps.convert(follow_crud.findFollows(conn, user.id))
-        for fol in follows:
-            logins += (user_crud.getLoginfromId(conn, fol))
-        for login in logins:
-            accounts.append(deps.get_user_by_login(login).dict())
-    return jsonify(accounts)
+        follows = deps.convert_list(deps.convert(follow_crud.find_follows(conn, user.id)))
+    return jsonify(follows)
 
 
 # все подписчики
 @user_blueprint.route("<string:login>/followers")
 def get_all_user_followers(login):
-    logins = []
-    accounts = []
     user = deps.get_user_by_login(login)
     with get_connection() as conn:
-        follows = deps.convert(follow_crud.findFollowers(conn, user.id))
-        for fol in follows:
-            logins += (user_crud.getLoginfromId(conn, fol))
-        for login in logins:
-            accounts.append(deps.get_user_by_login(login).dict())
-    return jsonify(accounts)
+        follows = deps.convert_list(deps.convert(follow_crud.find_followers(conn, user.id)))
+    return jsonify(follows)
 
 
 @user_blueprint.route("<string:login>/follow", methods=["DELETE"])

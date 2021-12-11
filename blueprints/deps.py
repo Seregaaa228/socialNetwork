@@ -44,3 +44,7 @@ def convert(follows) -> list:
     return lst
 
 
+def convert_list(a):
+    it = iter(a)
+    res_dct = dict(zip(it, it))
+    return res_dct

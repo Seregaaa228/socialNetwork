@@ -76,7 +76,7 @@ class UserCRUD:
             cur.close()
 
     # найти логин с айди
-    def getLoginfromId(self, conn: sqlite3.Connection, id: str) -> str:
+    def get_login_from_id(self, conn: sqlite3.Connection, id: str) -> str:
         cur = conn.cursor()
         try:
             cur.execute("SELECT User.login FROM User WHERE User.id LIKE ?", (id,),
@@ -87,7 +87,7 @@ class UserCRUD:
             cur.close()
 
     # найти айди с логина
-    def getIdfromLogin(self, conn: sqlite3.Connection, login: str) -> str:
+    def get_id_from_login(self, conn: sqlite3.Connection, login: str) -> str:
         cur = conn.cursor()
         try:
             cur.execute("SELECT User.id FROM User WHERE User.login LIKE ?", (login,),
