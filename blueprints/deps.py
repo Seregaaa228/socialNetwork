@@ -33,18 +33,3 @@ def get_input(ModelType: type[BaseModel]) -> BaseModel:
         raise errors.InvalidDataFormat("Json not found")
 
     return ModelType(**data)
-
-
-def convert(follows) -> list:
-    lst = []
-    for fol in follows:
-        for _ in fol:
-            lst.append(_)
-
-    return lst
-
-
-def convert_list(a):
-    it = iter(a)
-    res_dct = dict(zip(it, it))
-    return res_dct
