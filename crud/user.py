@@ -54,7 +54,7 @@ class UserCRUD:
         try:
             cur.execute(
                 "SELECT User.id, User.login, "
-                " COUNT(DISTINCT f1.follower), COUNT(DISTINCT f2.follows)"
+                " COUNT(DISTINCT f1.follower), COUNT(DISTINCT f2.follows) "
                 "FROM User "
                 "LEFT JOIN Follow AS f1 ON f1.follows = User.id "
                 "LEFT JOIN Follow AS f2 ON f2.follower = User.id "

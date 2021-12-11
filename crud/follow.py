@@ -45,17 +45,21 @@ class FollowCRUD:
     # найти подписки
     def find_follows(
             self, conn: sqlite3.Connection, id: str
-    ):
+    ) -> list[BaseUserModel]:
         cur = conn.cursor()
 
         try:
             cur.execute(
-                "SELECT User.login, User.id FROM User JOIN Follow on User.id = Follow.follows WHERE Follow.follower LIKE ? ",
+                "SELECT User.id, User.login "
+                "FROM User "
+                "JOIN Follow "
+                "ON User.id = Follow.follows "
+                "WHERE Follow.follower = ? ",
                 (id,),
 
             )
-            record = cur.fetchall()
-            return record
+            rows = cur.fetchall()
+            return [BaseUserModel(id=id, login=login) for id, login in rows]
         finally:
             cur.close()
 
@@ -67,11 +71,14 @@ class FollowCRUD:
 
         try:
             cur.execute(
-                "SELECT User.login, User.id FROM User JOIN Follow on User.id = Follow.follower WHERE Follow.follows LIKE ? ",
+                "SELECT User.id, User.login "
+                "FROM User "
+                "JOIN Follow "
+                "ON User.id = Follow.follower "
+                "WHERE Follow.follows = ?",
                 (id,),
-
             )
-            record = cur.fetchall()
-            return record
+            rows = cur.fetchall()
+            return [BaseUserModel(id=id, login=login) for id, login in rows]
         finally:
             cur.close()
